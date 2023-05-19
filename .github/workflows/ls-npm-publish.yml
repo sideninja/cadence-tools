@@ -39,7 +39,7 @@ jobs:
           git push origin $(echo $release_branch)
 
           # Create a pull request with the changes
-          gh pr create --title "[LS] Update and publish NPM package $release_version" --body "Updating the version in package.json to $release_version and publishing to NPM" --base main --head $(echo $release_branch)
+          gh pr create --title "[LS] Update and publish NPM package $release_version" --body "Updating the version in package.json to $release_version and publishing to NPM" --base master --head $(echo $release_branch)
         env:
           GH_TOKEN: ${{ github.token }}
       - name: "Build NPM package"
