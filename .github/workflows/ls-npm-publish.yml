@@ -18,8 +18,8 @@ jobs:
       - name: "Update package.json"
         run: |
           release_version=$(echo "${{ github.event.release.tag_name }}" | cut -d "v" -f 2) 
-          jq '.version = $version' --arg version "$release_version" package.json > tmp_package.json && mv tmp_package.json package.json
-          cat package.json
+          jq '.version = $version' --arg version "$release_version" ./npm-packages/cadence-language-server/package.json > tmp_package.json && mv tmp_package.json ./npm-packages/cadence-language-server/package.json
+          cat ./npm-packages/cadence-language-server/package.json
           
       - name: "Create PR"
         run: |
@@ -27,16 +27,16 @@ jobs:
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
           # Commit changes
-          git add package.json
+          git add ./npm-packages/cadence-language-server/package.json
           git commit -m "Update version to $release_version"
 
           # Create a branch for the changes
-          git branch ls-npm-publish
-          git checkout ls-npm-publish
-          git push origin ls-npm-publish
+          git branch ls/npm-publish
+          git checkout ls/npm-publish
+          git push origin ls/npm-publish
 
           # Create a pull request with the changes
-          gh pr create --title "Update LS NPM version to $release_version" --body "Updating the version in package.json to $release_version. After this PR is merged an GitHub action will automatically publish the NPM package." --base main --head version-update
+          gh pr create --title "[LS] Update and publish NPM package $release_version" --body "Updating the version in package.json to $release_version and publishing to NPM" --base main --head version-update
       - name: "Build NPM package"
         run: npm build  
       - name: "Publish NPM package"
