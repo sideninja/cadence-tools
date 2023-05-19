@@ -45,6 +45,7 @@ jobs:
       - name: "Build NPM package"
         run: |
           cd npm-packages/cadence-language-server
+          npm install
           npm run build  
       - name: "Publish NPM package"
         run: |
