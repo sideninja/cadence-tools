@@ -17,9 +17,9 @@ jobs:
             registry-url: 'https://registry.npmjs.org'
       - name: "Update package.json"
         run: |
-          release_version=$(echo "${{ github.event.release.tag_name }}" | cut -f3 -d"v") 
+          tag_name="${{ github.event.release.tag_name }}"
+          release_version=$(echo "$tag_name" | awk -F"/v" '{print $2}')
           echo "Version $release_version"
-          echo "Tag ${{github.event.release.tag_name}}"
           
           jq '.version = $version' --arg version "$release_version" ./npm-packages/cadence-language-server/package.json > tmp_package.json && mv tmp_package.json ./npm-packages/cadence-language-server/package.json
           cat ./npm-packages/cadence-language-server/package.json
