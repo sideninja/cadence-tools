@@ -18,6 +18,7 @@ jobs:
       - name: "Update package.json"
         run: |
           tag_name="${{ github.event.release.tag_name }}"
+          echo "TAG: $tag_name"
           release_version=$(echo "$tag_name" | awk -F"/v" '{print $2}')
           echo "Version $release_version"
           
