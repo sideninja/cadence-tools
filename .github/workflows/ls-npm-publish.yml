@@ -20,10 +20,8 @@ jobs:
           release_version=$(echo "${{ github.event.release.tag_name }}" | cut -d "v" -f 2) 
           jq '.version = $version' --arg version "$release_version" ./npm-packages/cadence-language-server/package.json > tmp_package.json && mv tmp_package.json ./npm-packages/cadence-language-server/package.json
           cat ./npm-packages/cadence-language-server/package.json
-          
-      - name: "Create PR"
-        run: |
-          release_branch=ls/npm-publish-${{release_version}}
+
+          release_branch=$(ls/npm-publish-${{release_version}})
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
