@@ -1,12 +1,11 @@
 name: Publish LS NPM Package
 
-on:
-  release:
-    types:
-      - created
+on:  
+  push:
+    tags:
+      - 'languageserver/v*'
 jobs:
    build:
-    if: startsWith(github.event.release.target_commitish, 'refs/tags/languageserver') 
     runs-on: ubuntu-latest
     steps:
     # This only runs this action if the release was made for language server
