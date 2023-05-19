@@ -43,8 +43,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - name: "Build NPM package"
-        run: npm build  
+        run: |
+          cd npm-packages/cadence-language-server
+          npm build  
       - name: "Publish NPM package"
-        run: npm publish
+        run: |
+          cd npm-packages/cadence-language-server
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
