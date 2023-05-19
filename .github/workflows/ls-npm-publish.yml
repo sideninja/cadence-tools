@@ -1,0 +1,53 @@
+name: Publish LS NPM Package
+
+on:
+  release:
+    types:
+      - created
+jobs:
+   build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+    # This only runs this action if the release was made for language server
+    if: startsWith(github.event.release.target_commitish, 'refs/tags/languageserver') 
+    run: |
+      # Extract release version from event payload
+      release_version=$(echo "${{ github.event.release.tag_name }}" | cut -d "v" -f 2)
+
+      # Update package.json file with release version
+      jq '.version = $version' --arg version "$release_version" package.json > tmp_package.json && mv tmp_package.json package.json
+
+      # Display the updated package.json file
+      cat package.json
+
+      # Configure git
+      git config user.name "${{ github.actor }}"
+      git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      # Commit changes
+      git add package.json
+      git commit -m "Update version to $release_version"
+
+      # Create a branch for the changes
+      git branch ls-npm-publish
+      git checkout ls-npm-publish
+
+      # Push the branch to the repository
+      git push origin ls-npm-publish
+
+      # Create a pull request with the changes
+      gh pr create --title "Update LS NPM version to $release_version" --body "Updating the version in package.json to $release_version. After this PR is merged an GitHub action will automatically publish the NPM package." --base main --head version-update
+      
+      # Run build of LS 
+      npm build
+      
+      # Publish npm package
+      npm publish
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
