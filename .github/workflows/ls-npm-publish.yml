@@ -37,6 +37,8 @@ jobs:
 
           # Create a pull request with the changes
           gh pr create --title "[LS] Update and publish NPM package $release_version" --body "Updating the version in package.json to $release_version and publishing to NPM" --base main --head version-update
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: "Build NPM package"
         run: npm build  
       - name: "Publish NPM package"
