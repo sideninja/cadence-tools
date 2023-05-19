@@ -31,12 +31,12 @@ jobs:
           git commit -m "Update version to $release_version"
 
           # Create a branch for the changes
-          git branch ls/npm-publish-$release_version
-          git checkout ls/npm-publish-$release_version
-          git push origin ls/npm-publish-$release_version
+          git branch ls/npm-publish-${{release_version}}
+          git checkout ls/npm-publish-${{release_version}}
+          git push origin ls/npm-publish-${{release_version}}
 
           # Create a pull request with the changes
-          gh pr create --title "[LS] Update and publish NPM package $release_version" --body "Updating the version in package.json to $release_version and publishing to NPM" --base main --head ls/npm-publish-$release_version
+          gh pr create --title "[LS] Update and publish NPM package $release_version" --body "Updating the version in package.json to $release_version and publishing to NPM" --base main --head ls/npm-publish-${{release_version}}
         env:
           GH_TOKEN: ${{ github.token }}
       - name: "Build NPM package"
