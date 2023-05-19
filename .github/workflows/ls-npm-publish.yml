@@ -33,6 +33,7 @@ jobs:
           # Create a branch for the changes
           git branch ls/npm-publish
           git checkout ls/npm-publish
+          git pull
           git push origin ls/npm-publish
 
           # Create a pull request with the changes
