@@ -19,9 +19,7 @@ jobs:
         run: |
           release_version=$(echo "${{ github.event.release.tag_name }}" | cut -f3 -d"v") 
           echo "Version $release_version"
-          echo $release_version
-          echo "Tag $github.event.release.tag_name"
-          echo $github.event.release.tag_name
+          echo "Tag ${{github.event.release.tag_name}}"
           
           jq '.version = $version' --arg version "$release_version" ./npm-packages/cadence-language-server/package.json > tmp_package.json && mv tmp_package.json ./npm-packages/cadence-language-server/package.json
           cat ./npm-packages/cadence-language-server/package.json
